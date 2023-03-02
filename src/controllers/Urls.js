@@ -9,8 +9,8 @@ const nanoid = customAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvw
 async function getShortUrl(req, res) {
     const { id } = req.params;
     if (!id || Number.isNaN(Number(id))) {
-        errors["404.2"].message = "invalid id param";
-        return res.status(errors["404.2"].code).send(errors["404.2"]);
+        errors[409].message = "invalid id param";
+        return res.status(errors[409].code).send(errors[409]);
     }
     await openPostgresClient(async (error) => {
         if (error) return res.status(errors[500].code).send(errors[500]);
@@ -21,6 +21,26 @@ async function getShortUrl(req, res) {
             return res.status(errors["404.2"].code).send(errors["404.2"]);
         }
         return res.status(200).send(getShortenUrlQuery.rows[0]);
+    });
+    return;
+}
+
+
+async function openShortUrl(req, res) {
+    const { shortUrl } = req.params;
+    if (!shortUrl || typeof shortUrl !== "string" || shortUrl.length !== 10) {
+        errors[409].message = "invalid shortUrl param";
+        return res.status(errors[409].code).send(errors[409]);
+    }
+    await openPostgresClient(async (error) => {
+        if (error) return res.status(errors[500].code).send(errors[500]);
+        const getShortenUrlQuery = await getPostgresClient().query("SELECT \"original_url\" FROM \"shorten_urls\" WHERE \"shorten_url\" = $1;", [shortUrl]);
+        releaseClient();
+        if (getShortenUrlQuery.rows.length === 0) {
+            errors["404.2"].message = `shorten url ${shortUrl} not found`;
+            return res.status(errors["404.2"].code).send(errors["404.2"]);
+        }
+        return res.redirect(getShortenUrlQuery.rows[0].original_url);
     });
     return;
 }
@@ -53,4 +73,4 @@ async function shortUrl(req, res) {
     }
 }
 
-export { getShortUrl, shortUrl };
+export { getShortUrl, openShortUrl, shortUrl };
