@@ -5,6 +5,7 @@ import express from "express";
 import { closePostgresPoolAndClient } from "./database.js";
 
 import AllRoutes from "../routes/AllRoutes.js";
+import SignRoutes from "../routes/Sign.js";
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ async function initializeServer() {
         app.use(cors());
         app.use(express.json());
 
+        app.use(SignRoutes);
         app.use(AllRoutes);
 
         server = app.listen(process.env.PORT);
