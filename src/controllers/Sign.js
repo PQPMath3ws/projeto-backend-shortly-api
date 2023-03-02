@@ -18,11 +18,11 @@ async function signIn(req, res) {
             const findUserQuery = await getPostgresClient().query("SELECT * FROM \"users\" WHERE \"email\" = $1;", [email]);
             if (findUserQuery.rows.length === 0) {
                 releaseClient();
-                return res.status(errors[401].code).send(errors[401]);
+                return res.status(errors["401.1"].code).send(errors["401.1"]);
             }
             if (!await bcrypt.compare(password, findUserQuery.rows[0].password)) {
                 releaseClient();
-                return res.status(errors[401].code).send(errors[401]);
+                return res.status(errors["401.1"].code).send(errors["401.1"]);
             }
             const token = jws.sign({ header: { alg: 'HS256' }, payload: { name: findUserQuery.rows[0].name, email: findUserQuery.rows[0].email, }, secret: secretJwtKey });
             let date = new Date();
@@ -31,7 +31,6 @@ async function signIn(req, res) {
             releaseClient();
             return res.status(200).send({ token });
         } catch (_) {
-            console.log(_);
             return res.status(errors[500].code).send(errors[500]);
         }
     });
