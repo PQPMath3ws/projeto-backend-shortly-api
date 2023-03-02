@@ -6,6 +6,25 @@ import errors from "../const/errors.js";
 
 const nanoid = customAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", 10);
 
+async function getShortUrl(req, res) {
+    const { id } = req.params;
+    if (!id || Number.isNaN(Number(id))) {
+        errors["404.2"].message = "invalid id param";
+        return res.status(errors["404.2"].code).send(errors["404.2"]);
+    }
+    await openPostgresClient(async (error) => {
+        if (error) return res.status(errors[500].code).send(errors[500]);
+        const getShortenUrlQuery = await getPostgresClient().query("SELECT \"id\", \"shorten_url\" AS \"shortUrl\", \"original_url\" AS \"url\" FROM \"shorten_urls\" WHERE \"id\" = $1;", [Number(id)]);
+        releaseClient();
+        if (getShortenUrlQuery.rows.length === 0) {
+            errors["404.2"].message = `shorten url with id ${id} not found`;
+            return res.status(errors["404.2"].code).send(errors["404.2"]);
+        }
+        return res.status(200).send(getShortenUrlQuery.rows[0]);
+    });
+    return;
+}
+
 async function shortUrl(req, res) {
     const { url } = req.body;
     try {
@@ -34,4 +53,4 @@ async function shortUrl(req, res) {
     }
 }
 
-export { shortUrl };
+export { getShortUrl, shortUrl };
