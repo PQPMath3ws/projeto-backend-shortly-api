@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS "authentications"
     "type" authenticationSchemeNameType NOT NULL DEFAULT 'Bearer',
     "created" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     "expire_date" TIMESTAMPTZ NOT NULL,
-    CONSTRAINT "user_id" FOREIGN KEY("id") REFERENCES "users"("id")
+    "user_id" SERIAL NOT NULL REFERENCES "users"("id")
 );
 
 CREATE TABLE IF NOT EXISTS "shorten_urls"
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS "shorten_urls"
     "shorten_url" VARCHAR(10) NOT NULL,
     "original_url" VARCHAR(255) NOT NULL,
     "created" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    CONSTRAINT "user_id" FOREIGN KEY("id") REFERENCES "users"("id")
+    "user_id" SERIAL NOT NULL REFERENCES "users"("id")
 );
 
 
@@ -47,5 +47,11 @@ CREATE TABLE IF NOT EXISTS "shorten_urls_visits"
     "ip_address" VARCHAR(40) NOT NULL,
     "user_agent" VARCHAR(160) NOT NULL,
     "accessed_in" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    CONSTRAINT "shorten_url_id" FOREIGN KEY("id") REFERENCES "shorten_urls"("id")
+    "shorten_url_id" SERIAL NOT NULL REFERENCES "shorten_urls"("id")
 );
+
+ALTER TABLE "authentications" ADD CONSTRAINT "fk_user_id" FOREIGN KEY("user_id") REFERENCES "users"("id");
+
+ALTER TABLE "shorten_urls" ADD CONSTRAINT "fk_user_id" FOREIGN KEY("user_id") REFERENCES "users"("id");
+
+ALTER TABLE "shorten_urls_visits" ADD CONSTRAINT "fk_shorten_url_id" FOREIGN KEY("shorten_url_id") REFERENCES "shorten_urls"("id");
