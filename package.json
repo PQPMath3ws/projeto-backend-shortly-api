@@ -1,0 +1,38 @@
+{
+  "name": "projeto17-shortly",
+  "version": "1.0.0",
+  "description": "A simple backend project api for url short.",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node ./src/app.js",
+    "start-dev": "nodemon ./src/app.js"
+  },
+  "keywords": [
+    "node",
+    "nodejs",
+    "javascript",
+    "js",
+    "postgresql",
+    "postgres",
+    "sql",
+    "backend",
+    "api"
+  ],
+  "author": "PQPMath3ws",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "is-url": "^1.2.4",
+    "joi": "^17.8.3",
+    "jws": "^4.0.0",
+    "nanoid": "^4.0.1",
+    "pg": "^8.9.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
