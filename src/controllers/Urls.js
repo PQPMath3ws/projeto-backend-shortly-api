@@ -54,8 +54,8 @@ async function getShortUrl(req, res) {
 async function openShortUrl(req, res) {
     const { shortUrl } = req.params;
     if (!shortUrl || typeof shortUrl !== "string" || shortUrl.length !== 10) {
-        errors[409].message = "invalid shortUrl param";
-        return res.status(errors[409].code).send(errors[409]);
+        errors["404.2"].message = "invalid shortUrl param";
+        return res.status(errors["404.2"].code).send(errors["404.2"]);
     }
     await openPostgresClient(async (error) => {
         if (error) return res.status(errors[500].code).send(errors[500]);
