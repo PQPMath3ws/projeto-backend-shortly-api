@@ -11,9 +11,8 @@ router.all("/urls/shorten", isAuthenticated, async (req, res) => {
     return res.status(errors[405].code).send(errors[405]);
 });
 
-router.all("/urls/:id", isAuthenticated, async (req, res, next) => {
-    if (req.method === "DELETE") return await deleteShortUrl(req, res);
-    next();
+router.delete("/urls/:id", isAuthenticated, async (req, res, next) => {
+    return await deleteShortUrl(req, res);
 });
 
 router.all("/urls/:id", async (req, res) => {

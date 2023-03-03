@@ -41,7 +41,7 @@ CREATE TABLE public.authentications (
     id integer NOT NULL,
     token character varying(300) NOT NULL,
     type public.authenticationschemenametype DEFAULT 'Bearer'::public.authenticationschemenametype NOT NULL,
-    created timestamp with time zone DEFAULT now() NOT NULL,
+    "createdAt" timestamp with time zone DEFAULT now() NOT NULL,
     expire_date timestamp with time zone NOT NULL,
     user_id integer NOT NULL
 );
@@ -202,7 +202,7 @@ CREATE TABLE public.users (
     name character varying(120) NOT NULL,
     email character varying(120) NOT NULL,
     password character varying(72) NOT NULL,
-    created timestamp with time zone DEFAULT now() NOT NULL,
+    "createdAt" timestamp with time zone DEFAULT now() NOT NULL,
     updated timestamp with time zone
 );
 
