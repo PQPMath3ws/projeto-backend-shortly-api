@@ -41,7 +41,7 @@ CREATE TABLE public.authentications (
     id integer NOT NULL,
     token character varying(300) NOT NULL,
     type public.authenticationschemenametype DEFAULT 'Bearer'::public.authenticationschemenametype NOT NULL,
-    "createdAt" timestamp with time zone DEFAULT now() NOT NULL,
+    created timestamp with time zone DEFAULT now() NOT NULL,
     expire_date timestamp with time zone NOT NULL,
     user_id integer NOT NULL
 );
@@ -95,7 +95,7 @@ CREATE TABLE public.shorten_urls (
     id integer NOT NULL,
     shorten_url character varying(10) NOT NULL,
     original_url character varying(255) NOT NULL,
-    created timestamp with time zone DEFAULT now() NOT NULL,
+    "createdAt" timestamp with time zone DEFAULT now() NOT NULL,
     user_id integer NOT NULL
 );
 

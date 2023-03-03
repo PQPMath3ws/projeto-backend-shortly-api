@@ -45,7 +45,7 @@ async function getShortUrl(req, res) {
             errors["404.2"].message = `shorten url with id ${id} not found`;
             return res.status(errors["404.2"].code).send(errors["404.2"]);
         }
-        return res.status(201).send(getShortenUrlQuery.rows[0]);
+        return res.status(200).send(getShortenUrlQuery.rows[0]);
     });
     return;
 }
@@ -91,7 +91,7 @@ async function shortUrl(req, res) {
             }
             const insertedUrlQuery = await getPostgresClient().query("INSERT INTO \"shorten_urls\" (\"shorten_url\", \"original_url\", \"user_id\") VALUES ($1, $2, $3) RETURNING \"id\", \"shorten_url\" AS \"shortUrl\";", [await nanoid(), url, req.authentication.user_id]);
             releaseClient();
-            return res.status(200).send(insertedUrlQuery.rows[0]);
+            return res.status(201).send(insertedUrlQuery.rows[0]);
         });
         return;
     } catch (_) {
