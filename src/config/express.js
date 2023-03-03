@@ -5,6 +5,7 @@ import express from "express";
 import { closePostgresPoolAndClient } from "./database.js";
 
 import AllRoutes from "../routes/AllRoutes.js";
+import RankingRoutes from "../routes/Ranking.js";
 import SignRoutes from "../routes/Sign.js";
 import UrlsRoutes from "../routes/Urls.js";
 import UsersRoutes from "../routes/Users.js";
@@ -30,6 +31,7 @@ async function initializeServer() {
         app.use(cors());
         app.use(express.json());
 
+        app.use(RankingRoutes);
         app.use(SignRoutes);
         app.use(UrlsRoutes);
         app.use(UsersRoutes);
