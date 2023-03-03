@@ -6,6 +6,31 @@ import errors from "../const/errors.js";
 
 const nanoid = customAlphabet("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", 10);
 
+async function deleteShortUrl(req, res) {
+    const { id } = req.params;
+    if (!id || Number.isNaN(Number(id))) {
+        errors[409].message = "invalid id param";
+        return res.status(errors[409].code).send(errors[409]);
+    }
+    await openPostgresClient(async (error) => {
+        if (error) return res.status(errors[500].code).send(errors[500]);
+        const getShortenUrlQuery = await getPostgresClient().query("SELECT \"user_id\" FROM \"shorten_urls\" WHERE \"id\" = $1;", [Number(id)]);
+        if (getShortenUrlQuery.rows.length === 0) {
+            releaseClient();
+            errors["404.2"].message = `shorten url with id ${id} not found`;
+            return res.status(errors["404.2"].code).send(errors["404.2"]);
+        }
+        if (getShortenUrlQuery.rows[0].user_id !== req.authentication.user_id) {
+            releaseClient();
+            return res.status(errors["401.3"].code).send(errors["401.3"]);
+        }
+        await getPostgresClient().query("DELETE FROM \"shorten_urls\" WHERE \"id\" = $1;", [Number(id)]);
+        releaseClient();
+        return res.status(204).send();
+    });
+    return;
+}
+
 async function getShortUrl(req, res) {
     const { id } = req.params;
     if (!id || Number.isNaN(Number(id))) {
@@ -73,4 +98,4 @@ async function shortUrl(req, res) {
     }
 }
 
-export { getShortUrl, openShortUrl, shortUrl };
+export { deleteShortUrl, getShortUrl, openShortUrl, shortUrl };
