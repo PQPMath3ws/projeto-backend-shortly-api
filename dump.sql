@@ -148,7 +148,7 @@ CREATE TABLE public.shorten_urls_visits (
     id integer NOT NULL,
     ip_address character varying(40) NOT NULL,
     user_agent character varying(160) NOT NULL,
-    accessed_in timestamp with time zone DEFAULT now() NOT NULL,
+    "createdAt" timestamp with time zone DEFAULT now() NOT NULL,
     shorten_url_id integer NOT NULL
 );
 
