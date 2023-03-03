@@ -59,12 +59,14 @@ async function openShortUrl(req, res) {
     }
     await openPostgresClient(async (error) => {
         if (error) return res.status(errors[500].code).send(errors[500]);
-        const getShortenUrlQuery = await getPostgresClient().query("SELECT \"original_url\" FROM \"shorten_urls\" WHERE \"shorten_url\" = $1;", [shortUrl]);
-        releaseClient();
+        const getShortenUrlQuery = await getPostgresClient().query("SELECT \"id\", \"original_url\" FROM \"shorten_urls\" WHERE \"shorten_url\" = $1;", [shortUrl]);
         if (getShortenUrlQuery.rows.length === 0) {
+            releaseClient();
             errors["404.2"].message = `shorten url ${shortUrl} not found`;
             return res.status(errors["404.2"].code).send(errors["404.2"]);
         }
+        await getPostgresClient().query("INSERT INTO \"shorten_urls_visits\" (\"ip_address\", \"user_agent\", \"shorten_url_id\") VALUES ($1, $2, $3);", [req.socket.remoteAddress, req.headers["user-agent"], getShortenUrlQuery.rows[0].id]);
+        releaseClient();
         return res.redirect(getShortenUrlQuery.rows[0].original_url);
     });
     return;

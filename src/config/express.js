@@ -7,6 +7,7 @@ import { closePostgresPoolAndClient } from "./database.js";
 import AllRoutes from "../routes/AllRoutes.js";
 import SignRoutes from "../routes/Sign.js";
 import UrlsRoutes from "../routes/Urls.js";
+import UsersRoutes from "../routes/Users.js";
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ async function initializeServer() {
 
         app.use(SignRoutes);
         app.use(UrlsRoutes);
+        app.use(UsersRoutes);
         app.use(AllRoutes);
 
         server = app.listen(process.env.PORT);
