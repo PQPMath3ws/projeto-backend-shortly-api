@@ -45,7 +45,7 @@ async function getShortUrl(req, res) {
             errors["404.2"].message = `shorten url with id ${id} not found`;
             return res.status(errors["404.2"].code).send(errors["404.2"]);
         }
-        return res.status(200).send(getShortenUrlQuery.rows[0]);
+        return res.status(201).send(getShortenUrlQuery.rows[0]);
     });
     return;
 }
