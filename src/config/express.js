@@ -37,7 +37,7 @@ async function initializeServer() {
         app.use(UsersRoutes);
         app.use(AllRoutes);
 
-        server = app.listen(process.env.PORT);
+        server = app.listen(process.env.PORT || 5000);
     }
 
     process.on("SIGTERM", async () => await onShutDownServer());
